@@ -1,0 +1,62 @@
+<view class="page self-check-page">
+  <view class="checking-state" wx:if="{{phase === 'checking'}}">
+    <view class="page-title">正在确认设备</view>
+    <view class="page-lead">设备将自动检查放置、连接与环境</view>
+    <image class="product-hero checking-hero" src="/images/system-compact.png" mode="aspectFit" />
+    <view class="checking-copy">正在自检，请稍候</view>
+  </view>
+
+  <view class="ready-state" wx:elif="{{phase === 'ready' && readiness && settings}}">
+    <image class="ready-mark" src="/images/status-ready.png" mode="aspectFit" />
+    <view class="page-title ready-title">今晚已准备好</view>
+    <view class="page-lead ready-lead">放置与连接检查已完成</view>
+
+    <image class="product-hero ready-hero" src="/images/system-compact.png" mode="aspectFit" />
+
+    <view class="status-list">
+      <view class="status-row">
+        <image class="status-icon" src="/images/status-check-outline.png" mode="aspectFit" />
+        <text class="status-label">月石床头主机</text>
+        <text class="status-value">在线</text>
+      </view>
+      <view class="status-row">
+        <image class="status-icon" src="/images/status-check-outline.png" mode="aspectFit" />
+        <text class="status-label">枕下振动片</text>
+        <text class="status-value">已连接</text>
+      </view>
+      <view class="status-row">
+        <image class="status-icon" src="/images/status-check-outline.png" mode="aspectFit" />
+        <text class="status-label">放置与环境</text>
+        <text class="status-value">正常</text>
+      </view>
+    </view>
+
+    <button hover-class="none" class="settings-row" bindtap="adjustTonightSettings">
+      <text class="settings-label">今晚设置</text>
+      <text class="settings-summary">{{settings.sleepMode === 'shared' ? '共享睡眠' : '独睡'}} · {{settings.maxVibrationLevel}}/5 · {{settings.sleepProtectionMinutes}} 分钟</text>
+      <text class="settings-action">调整</text>
+    </button>
+
+    <state-banner wx:if="{{error}}" tone="danger" title="{{error.title}}" detail="{{errorMessage}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="handleServiceAction" bindaction="handleServiceAction" />
+    <button hover-class="none" class="primary-button complete-button" loading="{{completing}}" disabled="{{completing}}" bindtap="complete">完成准备</button>
+    <view class="local-note">夜间判断在设备本地完成</view>
+  </view>
+
+  <view class="failed-state" wx:else>
+    <view class="page-title">还需要调整</view>
+    <view class="page-lead">只显示未通过项，处理后重新检查</view>
+    <image class="product-hero failed-hero" src="/images/system-compact.png" mode="aspectFit" />
+
+    <view class="failed-list" wx:if="{{failedChecks.length}}">
+      <view class="failed-row" wx:for="{{failedChecks}}" wx:key="id">
+        <text class="failed-label">{{item.label}}</text>
+        <text class="failed-detail">{{item.detail}}</text>
+      </view>
+    </view>
+
+    <view class="card error-card" wx:if="{{error && !result}}">
+      <state-banner tone="danger" title="{{error.title}}" detail="{{errorMessage}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="retry" bindaction="handleServiceAction" />
+    </view>
+    <button hover-class="none" class="primary-button retry-button" bindtap="retry">调整后重试</button>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "首夜准备",
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "睡眠",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

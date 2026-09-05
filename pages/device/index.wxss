@@ -1,0 +1,21 @@
+.device-page { padding-top: 40rpx; }
+.state-card { margin-top: 24rpx; padding: 28rpx; border-radius: 28rpx; background: #fffaf2; text-align: center; }
+.state-card text { display: block; }
+.state-title { font-weight: 700; }
+.state-copy { margin-top: 8rpx; color: var(--muted); font-size: 21rpx; }
+.device-hero { display: flex; align-items: center; gap: 28rpx; min-height: 190rpx; margin-top: 36rpx; padding: 24rpx; }
+.device-image { width: 190rpx; height: 148rpx; flex: 0 0 auto; border-radius: 22rpx; }
+.device-hero text { display: block; }
+.device-name { font-size: 29rpx; font-weight: 700; }
+.device-name + text { margin-top: 8rpx; color: var(--muted); font-size: 20rpx; }
+.online-copy { display: inline-flex; margin-top: 12rpx; padding: 8rpx 14rpx; border-radius: 999rpx; background: rgba(83,108,45,.10); color: var(--olive); font-size: 22rpx; font-weight: 600; }
+.detail-list { padding-top: 6rpx; padding-bottom: 6rpx; }
+.detail-row { display: flex; align-items: center; justify-content: space-between; gap: 22rpx; padding: 24rpx 0; border-bottom: 1rpx solid #eee4d7; }
+.detail-row:last-child { border-bottom: 0; }
+.detail-row view { flex: 1; }
+.detail-row view text { display: block; }
+.detail-row view text:first-child { font-weight: 650; }
+.detail-row view text:last-child { margin-top: 7rpx; color: var(--muted); font-size: 20rpx; }
+.value { color: var(--muted); font-size: 21rpx; }
+.value.ok { color: var(--olive); font-weight: 600; }
+.value.warn { color: var(--amber-deep); }

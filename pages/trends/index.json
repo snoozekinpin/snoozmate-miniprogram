@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "七晚趋势",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

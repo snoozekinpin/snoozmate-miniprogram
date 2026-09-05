@@ -1,0 +1,43 @@
+<view class="page report-page">
+  <view class="page-title">睡眠</view>
+  <view class="scope-tabs">
+    <view class="scope-tab {{scope === 'night' ? 'active' : ''}}" data-scope="night" bindtap="setScope">昨夜</view>
+    <view class="scope-tab {{scope === 'week' ? 'active' : ''}}" data-scope="week" bindtap="setScope">7 晚</view>
+  </view>
+
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取睡眠记录</text><text class="state-copy">正在同步结构化夜间摘要。</text></view>
+
+  <block wx:if="{{!loading && phase === 'data'}}">
+    <state-banner wx:if="{{report.dataSource === 'simulated'}}" tone="info" title="当前展示模拟测试数据" detail="这些记录只用于联调，不代表真实睡眠情况。" />
+    <block wx:if="{{scope === 'night'}}">
+      <view class="report-header"><text>{{report.date}}</text><view>数据{{report.dataQuality}} <text class="quality-score">{{report.dataQualityScore}}%</text></view></view>
+      <view class="duration-block"><text class="duration-label">有效监测</text><view class="duration-value"><text>{{durationHours}}</text><text>小时</text><text>{{durationMinutes}}</text><text>分</text></view></view>
+      <view class="metric-grid">
+        <view class="metric-card"><text>{{report.snoreEventCount}}</text><text>鼾声趋势</text></view>
+        <view class="metric-card"><text>{{supineAssociationRate === null ? '—' : supineAssociationRate + '%'}}</text><text>仰卧关联</text></view>
+        <view class="metric-card"><text>{{responseCount}}/{{report.interventionCount}}</text><text>提醒响应</text></view>
+      </view>
+      <view class="night-timeline">
+        <view class="timeline-labels"><text>{{timelineStart}}</text><text>{{timelineEnd}}</text></view>
+        <view class="timeline-track"><view class="timeline-tick" wx:for="{{timelineTicks}}" wx:key="*this" style="left: {{item}}%"></view><view class="timeline-event" wx:for="{{timelineMarks}}" wx:key="*this" style="left: {{item}}%"><view></view></view></view>
+      </view>
+      <button hover-class="none" class="primary-button detail-button" bindtap="openEvents">查看夜间详情</button>
+      <view class="feedback-link" bindtap="openFeedback"><text>晨间反馈</text><view><text>{{feedback ? '已记录' : '待填写'}}</text><text class="arrow">›</text></view></view>
+      <view class="interpretation-card" bindtap="openInterpretation"><view class="row"><text class="eyebrow">{{interpretation ? interpretation.sourceLabel : '结构化摘要'}}</text><text class="arrow">›</text></view><text class="interpretation-title">{{interpretation ? interpretation.conclusion : '昨夜记录已整理'}}</text><text class="interpretation-copy">{{interpretation ? interpretation.summary : 'AI 暂不可用，以下数据仍可正常查看。'}}</text></view>
+      <view class="card evidence-card"><view class="row"><text class="evidence-title">仰卧关联说明</text><text class="attention">{{guidance.label}}</text></view><text>{{report.supineSnoreTrend}}</text><text>{{guidance.action}}</text></view>
+    </block>
+
+    <block wx:if="{{scope === 'week'}}">
+      <view class="week-hero"><text>有效记录</text><text>{{validNightCount}} 晚</text><text>{{validNightCount < 3 ? '继续记录后再观察趋势' : '已形成连续趋势'}}</text></view>
+      <view class="interpretation-card" wx:if="{{weekInterpretation}}" bindtap="openInterpretation"><view class="row"><text class="eyebrow">{{weekInterpretation.sourceLabel}}</text><text class="arrow">›</text></view><text class="interpretation-title">{{weekInterpretation.conclusion}}</text><text class="interpretation-copy">{{weekInterpretation.summary}}</text></view>
+      <view class="trend-card" wx:if="{{nights.length}}"><view class="row"><text>鼾声事件趋势</text><text class="trend-unit">近 7 晚</text></view><view class="bars"><view class="bar-column" wx:for="{{nights}}" wx:key="date"><view class="bar {{item.valid ? '' : 'invalid'}}" style="height: {{item.barHeight}}rpx"></view><text>{{item.date}}</text></view></view></view>
+      <view class="state-card" wx:if="{{trendUnavailable}}"><text class="state-title">七晚趋势暂未同步</text><text class="state-copy">昨夜记录仍可正常查看。</text></view>
+      <view class="feedback-link" bindtap="openFeedback"><text>反馈与更多趋势</text><view><text>继续记录</text><text class="arrow">›</text></view></view>
+    </block>
+  </block>
+
+  <view class="empty-state" wx:if="{{!loading && phase === 'empty'}}">昨夜没有足够的有效数据。请检查主机放置、麦克风和雷达状态后再记录一晚。</view>
+  <view class="state-card error-card" wx:if="{{!loading && phase === 'unavailable'}}"><text class="state-title">晨报关注类别暂不可用</text><text class="state-copy">{{errorMessage}}</text><button hover-class="none" class="primary-button" bindtap="retry">重新同步</button></view>
+  <state-banner wx:if="{{!loading && phase === 'error'}}" tone="danger" title="{{error.title}}" detail="{{errorMessage}}" retryable="{{error.retryable}}" action="{{error.action}}" retryText="重新同步" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="safe-note">用于趋势观察与体位提醒，不替代医疗检查</view>
+</view>

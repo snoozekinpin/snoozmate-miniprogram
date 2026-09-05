@@ -1,0 +1,4 @@
+{
+  "desc": "好眠 SnoozMate 页面索引",
+  "rules": [{ "action": "disallow", "page": "*" }]
+}

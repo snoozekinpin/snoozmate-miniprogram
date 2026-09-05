@@ -1,0 +1,36 @@
+<view class="page profile-page">
+  <view class="page-title">我的</view>
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取个人与设备资料</text><text class="state-copy">正在同步隐私设置与设备状态。</text></view>
+  <state-banner wx:elif="{{loadError}}" tone="danger" title="{{loadError.title}}" detail="{{loadError.detail}}" retryable="{{loadError.retryable}}" action="{{loadError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="empty-state" wx:elif="{{phase === 'empty'}}">暂无个人与设备资料。请重新登录或完成设备绑定。</view>
+
+  <block wx:else>
+    <state-banner wx:if="{{actionError}}" tone="danger" title="{{actionError.title}}" detail="{{actionError.detail}}" retryable="{{actionError.retryable}}" action="{{actionError.action}}" bindretry="retryAction" bindaction="handleActionError" />
+    <view class="device-card" bindtap="openDevice">
+      <image src="/images/system-compact.png" mode="aspectFit" />
+      <view class="primary-copy"><text>月石设备</text><view class="online-state"><view class="status-dot {{status.host.online ? '' : 'offline'}}"></view><text>{{status.host.online ? '在线' : '离线'}}</text></view></view><text class="arrow">›</text>
+    </view>
+
+    <view class="menu-card">
+      <view class="menu-row" bindtap="openDevice"><image src="/images/menu-family.png" mode="aspectFit" /><text>设备与家庭</text><text class="arrow">›</text></view>
+      <view class="menu-row" data-section="ai" bindtap="toggleSection"><image src="/images/menu-ai-data.png" mode="aspectFit" /><text>AI 与数据授权</text><text class="arrow">{{expandedSection === 'ai' ? '⌄' : '›'}}</text></view>
+      <view class="section-detail" wx:if="{{expandedSection === 'ai'}}">
+        <view class="authorization-row"><view><text>AI 读取睡眠资料</text><text>{{profile.aiDataAuthorized ? '已授权' : '未授权'}}</text></view><switch color="#D28B2D" checked="{{profile.aiDataAuthorized}}" disabled="{{authorizing}}" bindchange="toggleAiAuthorization" /></view>
+        <text>AI 仅使用结构化事件、夜间摘要、连续趋势与主动反馈；默认不上传整夜原始录音。</text>
+      </view>
+      <view class="menu-row" bindtap="openDevice"><image src="/images/menu-update.png" mode="aspectFit" /><text>模型与固件更新</text><text class="arrow">›</text></view>
+      <button hover-class="none" open-type="share" class="menu-row share-row"><text class="share-glyph">↗</text><text>分享好眠</text><text class="arrow">›</text></button>
+      <view class="menu-row" data-section="privacy" bindtap="toggleSection"><image src="/images/menu-privacy.png" mode="aspectFit" /><text>隐私与帮助</text><text class="arrow">{{expandedSection === 'privacy' ? '⌄' : '›'}}</text></view>
+      <view class="section-detail" wx:if="{{expandedSection === 'privacy'}}"><text>夜间判断与安全决策在月石本地完成。报告用于趋势观察与体位提醒，不替代医疗检查。</text></view>
+    </view>
+
+    <view class="diagnostics-toggle" bindtap="toggleDiagnostics"><text>演示与诊断</text><view><text wx:if="{{activeState}}">{{activeState}}</text><text class="arrow">{{showDiagnostics ? '⌄' : '›'}}</text></view></view>
+    <block wx:if="{{showDiagnostics}}">
+      <view class="menu-card demo-list"><view class="demo-row" wx:for="{{options}}" wx:key="kind"><view><text>{{item.label}}</text><text>{{item.detail}}</text></view><switch color="#D28B2D" checked="{{item.enabled}}" disabled="{{syncing}}" data-kind="{{item.kind}}" data-key="{{item.key}}" bindchange="toggleDemo" /></view></view>
+      <view class="safe-note">上述开关只切换 Mock 数据，用于走查空状态和故障恢复；不会虚构硬件或云端生产接口。</view>
+      <button hover-class="none" class="danger-button unbind-button" loading="{{syncing}}" disabled="{{syncing}}" bindtap="unbind">解绑月石床头主机</button>
+    </block>
+
+    <view class="version"><text>好眠 SnoozMate</text><text>小程序 MVP · Mock 模式</text></view>
+  </block>
+</view>

@@ -1,0 +1,48 @@
+<view class="page setup-page">
+  <view class="connection-stage" wx:if="{{machine.step === 'idle' || machine.step === 'searching' || machine.step === 'found' || machine.step === 'connecting'}}">
+    <view class="page-title">连接月石</view>
+    <view class="page-lead">请靠近设备并确认主机已通电</view>
+    <image class="product-hero" src="/images/system-compact.png" mode="aspectFit" />
+
+    <view class="device-row">
+      <view class="status-dot {{machine.step === 'found' || machine.step === 'connecting' ? '' : 'warning'}}"></view>
+      <view class="device-main">
+        <text class="device-name">{{machine.device ? machine.device.name : '正在寻找月石'}}</text>
+        <text class="device-meta" wx:if="{{machine.step === 'connecting'}}">连接中</text>
+        <text class="device-meta" wx:elif="{{machine.step === 'found'}}">已发现</text>
+        <text class="device-meta" wx:else>请稍候</text>
+      </view>
+    </view>
+
+    <button hover-class="none" class="primary-button bluetooth-button" wx:if="{{machine.step === 'found' || machine.step === 'connecting'}}" loading="{{machine.step === 'connecting'}}" disabled="{{machine.step === 'connecting'}}" bindtap="connect">蓝牙连接</button>
+    <text class="identity-note">设备身份将在蓝牙近场校验</text>
+  </view>
+
+  <view class="network-stage" wx:if="{{machine.step === 'connected' || machine.step === 'provisioning'}}">
+    <view class="page-title">连接网络</view>
+    <view class="page-lead">为 {{machine.device ? machine.device.name : 'SNOOZ'}} 配置 2.4G Wi-Fi</view>
+    <image class="product-thumb" src="/images/system-compact.png" mode="aspectFit" />
+    <view class="field-label">Wi-Fi 名称</view>
+    <input class="input" value="{{ssid}}" bindinput="inputSsid" />
+    <view class="field-label wifi-label">Wi-Fi 密码</view>
+    <input class="input" password value="{{password}}" bindinput="inputPassword" />
+    <button hover-class="none" class="primary-button network-button" loading="{{machine.step === 'provisioning'}}" disabled="{{machine.step === 'provisioning'}}" bindtap="provision">连接 Wi-Fi</button>
+    <text class="identity-note">Wi-Fi 信息仅通过蓝牙发送，不会保存到云端</text>
+  </view>
+
+  <view class="result-stage" wx:if="{{machine.step === 'failed'}}">
+    <view class="page-title">未能连接</view>
+    <view class="page-lead">{{errorMessage}}</view>
+    <image class="product-result" src="/images/system-compact.png" mode="aspectFit" />
+    <button hover-class="none" class="primary-button" wx:if="{{errorAction === 'reauth'}}" bindtap="recoverAuth">重新登录</button>
+    <button hover-class="none" class="primary-button" wx:else bindtap="retry">重试</button>
+    <button hover-class="none" class="primary-button demo-skip-button" bindtap="skipToHome">跳过（演示模式）</button>
+  </view>
+
+  <view class="result-stage" wx:if="{{machine.step === 'success'}}">
+    <view class="page-title">连接完成</view>
+    <view class="page-lead">{{machine.device ? machine.device.name : 'SNOOZ'}} 已连接</view>
+    <image class="product-result" src="/images/system-compact.png" mode="aspectFit" />
+    <button hover-class="none" class="primary-button" bindtap="finish">检查放置</button>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "设备自检",
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

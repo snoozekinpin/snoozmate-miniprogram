@@ -1,0 +1,28 @@
+<view class="page trends-page">
+  <view class="brand">好眠 SnoozMate</view><view class="page-title">最近七晚</view><view class="page-lead">把单晚事件放进连续趋势里看，更容易发现体位与响应的变化。</view>
+
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在加载趋势</text><text class="state-copy">正在汇总最近七晚的结构化记录。</text></view>
+  <block wx:if="{{!loading && phase === 'data'}}">
+    <state-banner wx:if="{{dataSource === 'simulated' || dataSource === 'mixed'}}" tone="info" title="{{dataSource === 'mixed' ? '当前包含混合联调数据' : '当前展示模拟测试数据'}}" detail="这些记录用于联调页面，不代表全部是真实睡眠情况。" />
+    <state-banner wx:if="{{insufficientData}}" tone="info" title="有效夜晚少于 3 晚" detail="当前趋势仅供参考，继续记录至少 3 个有效夜晚后再观察连续变化。" />
+    <view class="guidance-card {{guidance.tone}}" wx:if="{{guidance}}"><text>{{guidance.label}}</text><text>{{guidance.title}}</text><text>{{guidance.action}}</text></view>
+    <view class="chart-card">
+      <view class="chart-title"><text>鼾声趋势事件</text><text>近七晚</text></view>
+      <view class="chart"><view class="bar-column" wx:for="{{nights}}" wx:key="date"><view class="bar {{item.valid ? '' : 'invalid'}}" style="height: {{item.barHeight}}rpx"><text wx:if="{{item.valid}}">{{item.snoreEvents}}</text></view><text>{{item.date}}</text></view></view>
+      <view class="legend"><view><view class="legend-mark amber"></view><text>有效记录</text></view><view><view class="legend-mark"></view><text>数据不足</text></view></view>
+    </view>
+    <view class="trend-grid"><view class="trend-card"><text>最近一晚</text><text>{{lastSuccessRate}}%</text><text>干预成功率</text></view><view class="trend-card"><text>有效夜晚</text><text>{{validCount}} / 7</text><text>其余为数据不足</text></view></view>
+
+    <view class="section-title">三项晨间反馈</view>
+    <view class="feedback-card card">
+      <view class="question"><text>昨夜是否被弄醒</text><view class="choice-row"><view class="choice {{feedback.awakened === false ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-key="awakened" data-value="false" bindtap="chooseBoolean">没有</view><view class="choice {{feedback.awakened === true ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-key="awakened" data-value="true" bindtap="chooseBoolean">有</view></view></view>
+      <view class="question"><text>伴侣是否受影响</text><view class="choice-row"><view class="choice {{feedback.partnerAffected === false ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-key="partnerAffected" data-value="false" bindtap="chooseBoolean">没有</view><view class="choice {{feedback.partnerAffected === true ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-key="partnerAffected" data-value="true" bindtap="chooseBoolean">有</view></view></view>
+      <view class="question"><text>次日精神状态</text><view class="energy-row"><view wx:for="{{energyOptions}}" wx:key="*this" class="energy {{feedback.nextDayEnergy === item ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-value="{{item}}" bindtap="setEnergy">{{item}}</view></view><view class="energy-label"><text>很疲惫</text><text>状态很好</text></view></view>
+      <button hover-class="none" class="primary-button feedback-button" loading="{{submitting}}" disabled="{{submitting}}" bindtap="submitFeedback">{{submitted ? '已记录，可再次更新' : '提交反馈'}}</button>
+    </view>
+  </block>
+  <view class="empty-state" wx:if="{{!loading && phase === 'empty'}}">云端尚未收到有效夜间事件。请确认主机在线、传感器就绪并完成一晚记录；没有数据时不会生成成功率或接受晨间反馈。</view>
+  <view class="state-card error-card" wx:if="{{!loading && phase === 'unavailable'}}"><text class="state-title">趋势关注类别暂不可用</text><text class="state-copy">{{errorMessage}}</text><button hover-class="none" class="primary-button" bindtap="retry">重新同步</button></view>
+  <state-banner wx:if="{{!loading && phase === 'error'}}" tone="danger" title="{{error.title}}" detail="{{errorMessage}}" retryable="{{error.retryable}}" action="{{error.action}}" retryText="重新同步" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="safe-note">用于趋势观察与体位提醒，不替代医疗检查</view>
+</view>

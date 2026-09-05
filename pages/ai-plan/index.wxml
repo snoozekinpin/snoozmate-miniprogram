@@ -1,0 +1,37 @@
+<view class="page plan-page">
+  <view class="plan-hero">
+    <view class="page-title">减少打扰，保持有效</view>
+    <text class="plan-lead">AI 提出候选；确认后由月石本地校验。</text>
+  </view>
+
+  <view class="state-card" wx:if="{{loading}}">正在准备今晚方案</view>
+  <state-banner wx:if="{{!loading && error}}" tone="danger" title="{{error.title}}" detail="{{error.detail}}" retryable="false" />
+
+  <block wx:if="{{!loading && candidate}}">
+    <view class="rationale-card"><text>判断依据</text><text>{{candidate.rationale}}</text></view>
+    <view class="compare-card">
+      <view class="compare-row"><text>最大振动等级</text><view><text>{{currentSettings.maxVibrationLevel}}</text><text>→</text><text>{{candidateSettings.maxVibrationLevel}}</text></view></view>
+      <view class="compare-row"><text>入睡保护时间</text><view><text>{{currentSettings.sleepProtectionMinutes}} 分</text><text>→</text><text>{{candidateSettings.sleepProtectionMinutes}} 分</text></view></view>
+      <view class="compare-row"><text>每晚次数上限</text><view><text>{{currentSettings.nightlyInterventionLimit}} 次</text><text>→</text><text>{{candidateSettings.nightlyInterventionLimit}} 次</text></view></view>
+    </view>
+    <view class="plan-boundary">不改变独睡/共享睡眠和灵敏度；方案仅今晚有效，不能持续控制振动波形。</view>
+
+    <view class="command-card" wx:if="{{command}}">
+      <text class="command-label">设备回读</text>
+      <text class="command-title" wx:if="{{command.status === 'pending'}}">等待月石校验</text>
+      <text class="command-title" wx:elif="{{command.status === 'readback-pending'}}">已接收，正在回读</text>
+      <text class="command-title" wx:elif="{{command.status === 'applied'}}">今晚方案已应用</text>
+      <text class="command-title" wx:elif="{{command.status === 'readback-timeout'}}">回读超时，原设置不变</text>
+      <text class="command-title" wx:elif="{{command.status === 'readback-mismatch'}}">回读不一致，原设置不变</text>
+      <text class="command-title" wx:else>月石未接受本次候选</text>
+      <text class="command-copy" wx:if="{{appliedSettings}}">月石回读一致 · 仅今晚有效</text>
+      <text class="command-copy" wx:else>只有设备回读一致后才会显示已应用。</text>
+      <button hover-class="none" wx:if="{{command.status === 'readback-timeout' || command.status === 'readback-mismatch'}}" class="secondary-button reconcile" bindtap="reconcile">重新核对设备</button>
+    </view>
+
+    <button hover-class="none" wx:if="{{!command}}" class="primary-button apply-button" disabled="{{applying}}" bindtap="apply">{{applying ? '正在发送' : '确认并应用今晚方案'}}</button>
+    <button hover-class="none" class="secondary-button manual-button" bindtap="openManualSettings">手动设置</button>
+  </block>
+
+  <view class="safe-note">用于趋势观察与体位提醒，不替代医疗检查</view>
+</view>

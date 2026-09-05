@@ -1,0 +1,42 @@
+<view class="page readiness-page" wx:if="{{!loading && status && settings}}">
+  <view class="brand">好眠 SnoozMate</view>
+  <view class="page-title">{{readiness.ready ? '首夜准备好了' : '还需要调整'}}</view>
+  <view class="page-lead">{{readiness.ready ? '确认下面几项后，月石床头主机会在设备本地开始今晚的守护。' : '请按未通过项调整后重新检查，设备不会在未就绪时开始首夜。'}}</view>
+  <state-banner wx:if="{{error}}" tone="danger" title="{{error.title}}" detail="{{errorMessage}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="handleServiceAction" bindaction="handleServiceAction" />
+
+  <view class="card confirmation-card" wx:if="{{!readiness.ready}}">
+    <view class="confirmation-row" wx:for="{{readiness.checks}}" wx:key="id"><text class="confirmation-mark">{{item.ready ? '✓' : '!'}}</text><view><text class="confirmation-title">{{item.label}}</text><text class="confirmation-copy">{{item.ready ? '已确认' : item.detail}}</text></view></view>
+    <button hover-class="none" class="primary-button" bindtap="retry">重新检查</button>
+    <button hover-class="none" class="text-action" bindtap="adjustPlacement">返回放置校准</button>
+  </view>
+
+  <view class="card confirmation-card" wx:if="{{readiness.ready}}">
+    <view class="confirmation-row"><text class="confirmation-mark">✓</text><view><text class="confirmation-title">月石床头主机</text><text class="confirmation-copy">已放在床头，正面朝向床中央</text></view></view>
+    <view class="confirmation-row"><text class="confirmation-mark">✓</text><view><text class="confirmation-title">枕下定向振动片</text><text class="confirmation-copy">已平整放在枕头下方，并通过有线连接</text></view></view>
+  </view>
+
+  <view class="section-title" wx:if="{{readiness.ready}}">今晚的安全范围</view>
+  <view class="card limits-card" wx:if="{{readiness.ready}}">
+    <view class="limit-row"><text>同睡情况</text><text>{{settings.sleepMode === 'shared' ? '共享睡眠' : '独睡'}}</text></view>
+    <view class="limit-row"><text>最大振动等级</text><text>{{settings.maxVibrationLevel}} / 5</text></view>
+    <view class="limit-row"><text>入睡保护时间</text><text>{{settings.sleepProtectionMinutes}} 分钟</text></view>
+    <view class="limit-row"><text>每晚提醒上限</text><text>{{settings.nightlyInterventionLimit}} 次</text></view>
+  </view>
+
+  <view class="safe-note" wx:if="{{readiness.ready}}">整夜原始录音默认不上云；只会保存结构化事件、夜间摘要与趋势。小程序不持续控制振动，停止判断由设备本地完成。</view>
+  <button hover-class="none" wx:if="{{readiness.ready}}" class="primary-button complete-button" loading="{{completing}}" disabled="{{completing}}" bindtap="complete">完成设置，开始首夜</button>
+</view>
+
+<view class="page readiness-page" wx:if="{{loading}}">
+  <view class="brand">好眠 SnoozMate</view>
+  <view class="card center-card">
+    <view class="loading-mark">· · ·</view><text class="state-title">正在加载首夜准备</text><text class="state-copy">正在读取设备状态与今晚的安全范围。</text>
+  </view>
+</view>
+
+<view class="page readiness-page" wx:if="{{!loading && errorMessage}}">
+  <view class="brand">好眠 SnoozMate</view>
+  <view class="card error-card">
+    <state-banner tone="danger" title="{{error.title}}" detail="{{errorMessage}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="handleServiceAction" bindaction="handleServiceAction" />
+  </view>
+</view>

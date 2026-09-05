@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "好眠 AI",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "琥珀夜灯",
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

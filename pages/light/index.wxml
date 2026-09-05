@@ -1,0 +1,20 @@
+<view class="page light-page">
+  <view class="brand night-brand">好眠 SnoozMate</view><view class="page-title night-title">琥珀夜灯</view><view class="page-lead night-lead">夜间只使用低亮暖琥珀光，减少对再次入睡的干扰。</view>
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取夜灯状态</text><text class="state-copy">正在同步低亮暖琥珀光设置。</text></view>
+  <state-banner wx:elif="{{loadError}}" tone="danger" title="{{loadError.title}}" detail="{{loadError.detail}}" retryable="{{loadError.retryable}}" action="{{loadError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="empty-state night-empty" wx:elif="{{phase === 'empty'}}">暂无夜灯设置。请确认月石床头主机已连接。</view>
+  <block wx:else>
+  <state-banner wx:if="{{actionError}}" tone="danger" title="{{actionError.title}}" detail="{{actionError.detail}}" retryable="{{actionError.retryable}}" action="{{actionError.action}}" bindretry="retryAction" bindaction="handleActionError" />
+  <state-banner wx:if="{{controlError}}" tone="warning" title="{{controlError.title}}" detail="{{controlError.detail}}" retryable="{{controlError.retryable}}" action="{{controlError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="lamp-stage {{light.enabled ? 'on' : ''}}" style="opacity: {{light.enabled ? 0.72 + brightnessDraft / 140 : 1}}"><view class="lamp-device"><view class="lamp-line"></view></view><view class="lamp-glow"></view></view>
+  <button hover-class="none" class="light-toggle" loading="{{syncing}}" disabled="{{syncing || !controlAvailable}}" bindtap="toggle">{{light.enabled ? '关闭夜灯' : '打开夜灯'}}</button>
+  <view class="section-title night-section">灯效</view>
+  <view class="mode-grid"><view class="mode-card {{light.mode === 'bedtime-breathe' ? 'active' : ''}} {{syncing || !controlAvailable ? 'disabled' : ''}}" data-mode="bedtime-breathe" bindtap="setMode"><text>睡前呼吸灯</text><text>轻缓明暗变化</text></view><view class="mode-card {{light.mode === 'night-low' ? 'active' : ''}} {{syncing || !controlAvailable ? 'disabled' : ''}}" data-mode="night-low" bindtap="setMode"><text>低亮起夜</text><text>保持稳定低亮</text></view></view>
+  <view class="night-slider">
+    <view class="slider-heading"><view><text>亮度</text><text>适合夜间的低亮范围</text></view><text class="slider-value">{{brightnessDraft}}%</text></view>
+    <view class="large-slider"><slider min="5" max="40" step="1" value="{{brightnessDraft}}" disabled="{{syncing || !controlAvailable}}" activeColor="#E2A23A" backgroundColor="#5B4639" block-color="#FFE5B3" block-size="28" bindchanging="previewBrightness" bindchange="setBrightness" /></view>
+    <view class="slider-scale"><text>低亮</text><text>明亮</text></view>
+  </view>
+  <view class="night-note">灯效不会使用纯蓝、青或冷白光。</view>
+  </block>
+</view>

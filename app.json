@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/onboarding/index",
+    "pages/home/index",
+    "pages/report/index",
+    "pages/ai/index",
+    "pages/trends/index",
+    "pages/profile/index",
+    "pages/setup/index",
+    "pages/calibration/index",
+    "pages/readiness/index",
+    "pages/device/index",
+    "pages/tonight/index",
+    "pages/sound/index",
+    "pages/light/index",
+    "pages/events/index",
+    "pages/live/index",
+    "pages/ai-detail/index",
+    "pages/ai-chat/index",
+    "pages/ai-plan/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "好眠 SnoozMate",
+    "navigationBarBackgroundColor": "#F6F0E7",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F6F0E7",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#766C61",
+    "selectedColor": "#B97728",
+    "backgroundColor": "#FFF9F0",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/index", "text": "今晚", "iconPath": "images/tab-tonight.png", "selectedIconPath": "images/tab-tonight-active.png" },
+      { "pagePath": "pages/report/index", "text": "睡眠", "iconPath": "images/tab-sleep.png", "selectedIconPath": "images/tab-sleep-active.png" },
+      { "pagePath": "pages/ai/index", "text": "AI", "iconPath": "images/tab-ai.png", "selectedIconPath": "images/tab-ai-active.png" },
+      { "pagePath": "pages/profile/index", "text": "我的", "iconPath": "images/tab-mine.png", "selectedIconPath": "images/tab-mine-active.png" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

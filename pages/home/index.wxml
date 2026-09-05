@@ -1,0 +1,37 @@
+<view class="page home-page">
+  <view class="home-header">
+    <view class="brand">好眠 SnoozMate</view>
+    <view class="device-pill" aria-label="月石床头主机状态" wx:if="{{status}}" bindtap="openDevice"><view class="status-dot {{status.host.online ? '' : 'offline'}}"></view><text>{{status.host.online ? '月石在线' : '设备离线'}}</text></view>
+  </view>
+
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在同步今晚状态</text></view>
+  <state-banner wx:elif="{{error}}" tone="danger" title="{{error.title}}" detail="{{error.detail}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="retryDevice" bindaction="handleDeviceAction" />
+
+  <block wx:else>
+    <state-banner wx:if="{{partialError}}" tone="warning" title="部分状态暂未同步" detail="{{partialError.detail}}" retryable="{{partialError.retryable}}" action="{{partialError.action}}" bindretry="retryDevice" bindaction="handleDeviceAction" />
+    <view class="hero-copy"><text class="hero-title">今晚已准备好</text></view>
+    <view class="offline-banner" wx:if="{{status && !status.host.online}}">状态暂时延迟，本地守护不受影响。</view>
+    <view class="pad-banner" wx:if="{{status && !status.pad.connected}}">枕下定向振动片未连接，今晚仅记录。</view>
+
+    <view class="product-stage" aria-label="月石床头主机与枕下定向振动片" bindtap="openLive"><image src="/images/system-hero.png" mode="aspectFit" /></view>
+
+    <view class="home-ai-row" bindtap="openAi"><view><image class="ai-mark" src="/images/tab-ai-active.png" mode="aspectFit" /><text>好眠 AI</text></view><view><text>{{activeCommand && activeCommand.status === 'applied' ? '今晚方案已应用' : '推荐方案 · 可手动微调'}}</text><text class="arrow">›</text></view></view>
+
+    <button hover-class="none" class="primary-button tonight-button" disabled="{{!status.controlAvailable}}" bindtap="openTonight">查看今晚设置</button>
+
+    <view class="control-grid">
+      <view class="control-card {{!status.controlAvailable ? 'disabled' : ''}}" bindtap="openSound"><image src="/images/control-sound.png" mode="aspectFit" /><view><text class="control-title">疗愈声音</text><text>{{sound.trackName}}</text></view><text class="arrow">›</text></view>
+      <view class="control-card {{!status.controlAvailable ? 'disabled' : ''}}" bindtap="openLight"><image src="/images/control-light.png" mode="aspectFit" /><view><text class="control-title">琥珀夜灯</text><text>{{light.enabled ? light.brightness + '%' : '已关闭'}}</text></view><text class="arrow">›</text></view>
+    </view>
+
+    <view class="command-banner" wx:if="{{activeCommand && activeCommand.status !== 'applied'}}" bindtap="openActiveCommand"><view><text>今晚设置正在生效</text><text>完成月石回读后才会确认</text></view><text class="arrow">›</text></view>
+
+    <view class="live-row" wx:if="{{guardian}}" bindtap="openLive"><view><text>实时守护</text><text>{{guardian.guardianState === 'intervening' ? '正在温和提醒' : guardian.guardianState === 'verifying' ? '正在验证响应' : '本地运行，断网也能继续。'}}</text></view><view><text>查看实时守护</text><text class="arrow">›</text></view></view>
+  </block>
+
+  <view class="report-shortcut" wx:if="{{morningReportState === 'loading'}}"><text>正在同步昨夜记录</text></view>
+  <state-banner wx:elif="{{morningReportState === 'error'}}" tone="danger" title="{{morningReportError.title}}" detail="{{morningReportError.detail}}" retryable="{{morningReportError.retryable}}" action="{{morningReportError.action}}" bindretry="retryMorningReport" bindaction="handleMorningReportAction" />
+  <view class="report-shortcut" wx:else bindtap="openReport"><text>{{morningReportCopy}}</text><text class="arrow">›</text></view>
+  <view class="privacy-line">默认不上传整夜原始录音 · 夜间判断在月石本地完成</view>
+  <view class="safe-note">用于趋势观察与体位提醒，不替代医疗检查</view>
+</view>

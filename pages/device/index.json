@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "设备详情",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

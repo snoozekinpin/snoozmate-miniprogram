@@ -1,0 +1,77 @@
+<view class="page ai-page">
+  <block wx:if="{{mode === 'overview'}}">
+    <view class="welcome-row">
+      <text class="greeting">{{greeting}}</text>
+      <button hover-class="none" class="records-link" wx:if="{{!consentRequired}}" data-mode="records" bindtap="setMode">记录</button>
+    </view>
+    <view class="hero-copy"><text class="hero-title">{{heroTitle}}</text></view>
+
+    <view class="state-card" wx:if="{{loading}}">正在整理这份记录</view>
+    <state-banner wx:if="{{!loading && error}}" tone="danger" title="{{error.title}}" detail="{{error.detail}}" retryable="{{error.retryable}}" bindretry="load" />
+
+    <view class="consent-card" wx:if="{{!loading && !error && consentRequired}}">
+      <text class="consent-title">先由你决定 AI 可以读什么</text>
+      <text class="consent-copy">AI 仅读取结构化夜间记录、趋势和主动反馈，默认不读取整夜原始录音。</text>
+      <button hover-class="none" class="primary-button consent-button" disabled="{{authorizing}}" bindtap="requestAiConsent">{{authorizing ? '正在确认' : '询问并授权'}}</button>
+    </view>
+
+    <block wx:if="{{!loading && overview}}">
+      <view class="conclusion-card">
+        <view class="ai-label"><image class="label-icon" src="/images/tab-ai-active.png" mode="aspectFit" /><text>{{overview.sourceLabel}}</text></view>
+        <text class="conclusion-title">{{overview.conclusion}}</text>
+        <text class="conclusion-copy">{{overview.summary}}</text>
+        <button hover-class="none" class="evidence-link" bindtap="toggleEvidenceList"><text>{{evidenceOpen ? '收起判断依据' : '为什么这样判断'}}</text><text class="evidence-toggle">{{evidenceOpen ? '−' : '⌄'}}</text></button>
+        <view class="evidence-list" wx:if="{{evidenceOpen}}">
+          <view class="evidence-item {{expandedEvidenceId === item.id ? 'expanded' : ''}}" wx:for="{{overview.evidence}}" wx:key="id" data-id="{{item.id}}" bindtap="toggleEvidence">
+            <view class="evidence-head"><text>{{item.metric}}</text><text>{{item.value}}{{item.unit}}</text></view>
+            <view class="evidence-body" wx:if="{{expandedEvidenceId === item.id}}"><text>{{item.explanation}}</text><text>{{item.window}} · 结构化记录</text></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="plan-card" wx:if="{{overview.kind === 'single-night' && overview.hasData}}">
+        <view class="plan-label"><image class="label-icon" src="/images/tab-sleep-active.png" mode="aspectFit" /><text>今晚温和方案</text></view>
+        <text class="plan-title">{{activeCommand && activeCommand.status === 'applied' ? '今晚已采用' : '保持当前温和强度'}}</text>
+        <text class="plan-summary" wx:if="{{candidate}}">灵敏度 {{candidate.candidateSettings.sensitivityLabel || '平衡'}} · 最高 {{candidate.candidateSettings.maxVibrationLevel}} 级 · 入睡保护 {{candidate.candidateSettings.sleepProtectionMinutes}} 分钟</text>
+        <text class="plan-summary" wx:else>{{candidateLoading ? '正在准备今晚建议' : '温和提醒 · 仅今晚有效'}}</text>
+
+        <view class="inline-command" wx:if="{{activeCommand}}">
+          <text class="command-title" wx:if="{{activeCommand.status === 'pending'}}">已发送，等待月石校验</text>
+          <text class="command-title" wx:elif="{{activeCommand.status === 'readback-pending'}}">月石已接收，正在回读</text>
+          <text class="command-title success" wx:elif="{{activeCommand.status === 'applied'}}">今晚方案已应用</text>
+          <text class="command-title" wx:elif="{{activeCommand.status === 'readback-timeout' || activeCommand.status === 'readback-mismatch'}}">未完成核对，原设置不变</text>
+          <text class="command-title" wx:else>月石未接受本次建议</text>
+          <text class="command-copy">{{appliedSettings ? '设备回读一致 · 仅今晚有效' : '只有设备回读一致后才会生效'}}</text>
+          <button hover-class="none" wx:if="{{activeCommand.status === 'readback-timeout' || activeCommand.status === 'readback-mismatch'}}" class="secondary-button inline-retry" bindtap="reconcileInlineCommand">重新核对设备</button>
+        </view>
+
+        <view class="plan-actions">
+          <button hover-class="none" class="primary-button plan-apply" disabled="{{applyingPlan || candidateLoading || (activeCommand && activeCommand.status === 'applied')}}" bindtap="applyInlinePlan">{{applyingPlan ? '正在发送' : (activeCommand && activeCommand.status === 'applied' ? '已采用' : '采用 AI 建议')}}</button>
+          <button hover-class="none" class="manual-button" bindtap="openManualSettings">手动调整</button>
+        </view>
+        <button hover-class="none" class="plan-detail-link" wx:if="{{candidate}}" bindtap="toggleInlinePlan">{{planOpen ? '收起调整依据' : '查看调整依据'}}</button>
+        <view class="plan-detail" wx:if="{{candidate && planOpen}}"><text>{{candidate.rationale}}</text><text>推荐仅今晚有效，不持续控制振动波形。</text></view>
+      </view>
+
+      <view class="command-banner" wx:if="{{activeCommand && activeCommand.status !== 'applied' && !planOpen}}" bindtap="openActiveCommand"><view><text>月石正在校验今晚设置</text><text>完成设备回读后才会生效</text></view><text class="arrow">›</text></view>
+      <view class="ask-card" bindtap="openChat"><view class="ask-icon"><image src="/images/tab-ai-active.png" mode="aspectFit" /></view><view class="ask-copy"><text>问好眠 AI</text><text>{{overview.hasData ? '追问昨夜变化与今晚建议' : '了解如何完成有效记录'}}</text></view><text class="arrow">›</text></view>
+    </block>
+  </block>
+
+  <block wx:if="{{mode === 'records'}}">
+    <view class="records-toolbar"><button hover-class="none" class="back-link" data-mode="overview" bindtap="setMode">‹ AI 首页</button></view>
+    <view class="record-filter" role="tablist">
+      <button hover-class="none" class="filter-chip {{recordFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="setRecordFilter">全部</button>
+      <button hover-class="none" class="filter-chip {{recordFilter === 'single-night' ? 'active' : ''}}" data-filter="single-night" bindtap="setRecordFilter">单晚</button>
+    </view>
+    <view class="record-list">
+      <view class="record-card" wx:for="{{filteredRecords}}" wx:key="interpretationId" data-id="{{item.interpretationId}}" data-revision="{{item.revision}}" bindtap="openDetail">
+        <view><view class="record-top"><text>{{item.generatedAt}}</text><text>{{item.kind === 'seven-night' ? '7 晚趋势' : '单晚解读'}}</text></view><text class="record-title">{{item.conclusion}}</text><text class="record-meta">{{item.summary}}</text></view><text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="data-boundary">仅保存 AI 结论与结构化依据，不保存连续原始录音。</view>
+  </block>
+
+  <view class="data-boundary" wx:if="{{mode === 'overview'}}">默认不上传整夜原始录音。</view>
+  <view class="safe-note">用于趋势观察与体位提醒，不替代医疗检查</view>
+</view>

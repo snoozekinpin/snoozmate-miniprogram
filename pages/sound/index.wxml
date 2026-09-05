@@ -1,0 +1,33 @@
+<view class="page sound-page">
+  <view class="brand">好眠 SnoozMate</view><view class="page-title">把声音留在设备里</view>
+  <view class="page-lead">在手机上试听声音；下方设置仅保存为设备期望配置，当前云端没有物理播放执行接口。</view>
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取声音状态</text><text class="state-copy">正在同步设备本地播放设置。</text></view>
+  <state-banner wx:elif="{{loadError}}" tone="danger" title="{{loadError.title}}" detail="{{loadError.detail}}" retryable="{{loadError.retryable}}" action="{{loadError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="empty-state" wx:elif="{{phase === 'empty'}}">暂无声音设置。请确认月石床头主机已连接。</view>
+  <block wx:else>
+  <state-banner wx:if="{{actionError}}" tone="danger" title="{{actionError.title}}" detail="{{actionError.detail}}" retryable="{{actionError.retryable}}" action="{{actionError.action}}" bindretry="retryAction" bindaction="handleActionError" />
+  <state-banner wx:if="{{controlError}}" tone="warning" title="{{controlError.title}}" detail="{{controlError.detail}}" retryable="{{controlError.retryable}}" action="{{controlError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+
+  <view class="sound-hero">
+    <view class="wave {{previewPlaying ? 'playing' : ''}}" aria-label="{{previewPlaying ? '手机试听播放中' : '手机试听已暂停'}}"><view></view><view></view><view></view><view></view><view></view><view></view><view></view><view></view><view></view></view>
+    <view class="playback-state {{previewPlaying ? 'playing' : ''}}"><view></view><text>{{previewPlaying ? '手机试听中' : '试听已暂停'}}</text></view>
+    <text>{{sound.sceneName}}</text><text>{{sound.trackName}}</text>
+    <button hover-class="none" class="play-button" bindtap="togglePlayback">{{previewPlaying ? '暂停试听' : '开始试听'}}</button>
+    <text class="preview-note" wx:if="{{previewMode}}">手机试听不代表设备已播放</text>
+    <text class="preview-note error" wx:if="{{previewError}}">{{previewError}}</text>
+  </view>
+
+  <view class="section-title">声音场景</view>
+  <view class="scene-grid"><view wx:for="{{sound.scenes}}" wx:key="id" class="scene-card {{sound.scene === item.id ? 'active' : ''}} {{!controlAvailable ? 'disabled' : ''}}" data-scene="{{item.id}}" bindtap="selectScene"><text>{{item.name}}</text><text>{{item.trackName}}</text></view></view>
+
+  <view class="card slider-card">
+    <view class="slider-heading"><view><text>音量</text><text>拖动调节设备音量</text></view><text class="slider-value">{{volumeDraft}}%</text></view>
+    <view class="large-slider"><slider min="0" max="100" value="{{volumeDraft}}" disabled="{{!controlAvailable}}" activeColor="#D28B2D" backgroundColor="#E7DCCF" block-color="#FFF8EE" block-size="28" bindchanging="previewVolume" bindchange="setVolume" /></view>
+    <view class="slider-scale"><text>轻</text><text>响</text></view>
+  </view>
+
+  <view class="section-title">定时关闭</view>
+  <view class="chip-row"><view wx:for="{{timers}}" wx:key="*this" class="chip {{sound.timer === item ? 'active' : ''}} {{!controlAvailable ? 'disabled' : ''}}" data-timer="{{item}}" bindtap="setTimer">{{item === 'all-night' ? '整夜' : item + ' 分钟'}}</view></view>
+  <view class="safe-note">场景、音量和定时仅同步设备期望设置；设备实际播放状态需待硬件执行接口提供。</view>
+  </block>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "开始使用好眠",
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

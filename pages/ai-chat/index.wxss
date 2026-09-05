@@ -1,0 +1,58 @@
+.chat-page { height: 100vh; padding-top: 24rpx; padding-bottom: 0; overflow: hidden; }
+.chat-toolbar { display: flex; min-height: 72rpx; align-items: center; justify-content: space-between; gap: 16rpx; }
+.history-link { width: auto; min-height: 64rpx; margin: 0; padding: 0; background: transparent; color: var(--amber-deep); font-size: 27rpx; line-height: 64rpx; }
+.context-pill { display: block; min-width: 0; overflow: hidden; padding: 12rpx 20rpx; border-radius: 999rpx; background: var(--amber-soft); color: var(--amber-deep); font-size: 25rpx; text-overflow: ellipsis; white-space: nowrap; }
+.state-card,.assistant-intro { margin-top: 28rpx; padding: 30rpx; border: 1rpx solid #eadfd2; border-radius: 30rpx; background: #fffdf9; color: var(--muted); font-size: 28rpx; line-height: 1.65; }
+.assistant-intro text { display: block; }
+.assistant-intro .message-role { margin-bottom: 8rpx; }
+.context-conclusion { margin-top: 20rpx; color: var(--ink); font-family: "Songti SC",serif; font-size: 38rpx; font-weight: 600; line-height: 1.4; }
+.context-summary { margin-top: 12rpx; color: var(--muted); font-size: 27rpx; line-height: 1.6; }
+.context-prompt { margin-top: 22rpx; padding-top: 18rpx; border-top: 1rpx solid rgba(94,75,57,.11); color: #8d7e70; font-size: 25rpx; }
+.conversation-scroll { height: calc(100vh - 296rpx - env(safe-area-inset-bottom)); padding: 0 2rpx 32rpx; }
+.quick-row { display: flex; flex-direction: column; gap: 12rpx; margin-top: 18rpx; }
+.quick-chip { width: 100%; min-height: 88rpx; margin: 0; padding: 0 26rpx; border: 1rpx solid #e5d8c8; border-radius: 22rpx; background: transparent; color: var(--brown); text-align: left; font-size: 28rpx; line-height: 88rpx; }
+.memory-fold { position: sticky; top: 12rpx; z-index: 2; width: 100%; min-height: 92rpx; margin: 22rpx 0 0; padding: 18rpx 24rpx; border: 1rpx solid #eadbc8; border-radius: 22rpx; background: #fff8ed; color: var(--brown); text-align: left; line-height: 1.45; }
+.memory-fold text { display: block; }
+.memory-fold text:first-child { font-size: 27rpx; font-weight: 650; }
+.memory-fold text:last-child { margin-top: 4rpx; color: var(--muted); font-size: 23rpx; }
+.carried-memory { margin-top: 18rpx; padding: 24rpx; border: 1rpx solid #eadbc8; border-radius: 22rpx; background: #fff8ed; }
+.carried-memory text { display: block; }
+.carried-memory text:first-child { color: var(--brown); font-size: 27rpx; font-weight: 650; }
+.carried-memory text:last-child { margin-top: 7rpx; color: var(--muted); font-size: 23rpx; line-height: 1.55; }
+.message { max-width: 90%; margin-top: 22rpx; padding: 28rpx; border-radius: 26rpx; background: var(--paper); }
+.message.user { margin-left: auto; background: var(--amber-soft); }
+.message.urgent { border: 1rpx solid #d7ab86; background: #f8eadf; }
+.message-role,.message-text { display: block; }
+.message-role { color: var(--amber-deep); font-size: 24rpx; }
+.message-text { margin-top: 10rpx; font-size: 30rpx; line-height: 1.65; }
+.answer-sections { margin-top: 18rpx; padding-top: 8rpx; border-top: 1rpx solid rgba(94,75,57,.12); }
+.answer-sections view { margin-top: 14rpx; }
+.answer-sections text { display: block; }
+.answer-sections text:first-child { color: var(--amber-deep); font-size: 24rpx; }
+.answer-sections text:last-child { margin-top: 6rpx; color: var(--muted); font-size: 28rpx; line-height: 1.6; }
+.inline-action { min-height: 80rpx; margin-top: 20rpx; border-radius: 20rpx; background: var(--amber-soft); color: var(--brown); font-size: 27rpx; line-height: 80rpx; }
+.answering { margin: 24rpx 8rpx; color: var(--muted); font-size: 26rpx; }
+.context-limit-card { margin-top: 24rpx; margin-bottom: 150rpx; padding: 28rpx; border: 1rpx solid #ead4b4; border-radius: 28rpx; background: #fff9ef; }
+.context-limit-card > text { display: block; }
+.context-limit-card > text:first-child { color: var(--ink); font-size: 32rpx; font-weight: 650; }
+.context-limit-card > text:nth-child(2) { margin-top: 10rpx; color: var(--muted); font-size: 25rpx; line-height: 1.6; }
+.context-limit-card > view { display: flex; gap: 14rpx; margin-top: 22rpx; }
+.context-limit-card button { flex: 1; min-height: 78rpx; margin: 0; border-radius: 20rpx; background: transparent; color: var(--amber-deep); font-size: 25rpx; line-height: 78rpx; }
+.context-limit-card button:first-child { background: var(--amber-action); color: #fff; }
+.composer { position: fixed; right: 0; bottom: 0; left: 0; z-index: 5; display: flex; gap: 12rpx; padding: 18rpx 28rpx calc(18rpx + env(safe-area-inset-bottom)); border-top: 1rpx solid #e6dbce; background: rgba(246,240,231,.96); }
+.composer input { flex: 1; height: 84rpx; padding: 0 24rpx; border-radius: 24rpx; background: var(--paper); font-size: 28rpx; }
+.composer button { width: 136rpx; height: 84rpx; margin: 0; border-radius: 24rpx; background: var(--amber); color: #fff; font-size: 28rpx; line-height: 84rpx; }
+.composer button[disabled] { background: #d6cbbd; }
+.history-toolbar { display: flex; min-height: 70rpx; align-items: center; justify-content: space-between; }
+.history-toolbar button { width: auto; min-height: 62rpx; margin: 0; padding: 0; background: transparent; color: var(--amber-deep); font-size: 27rpx; line-height: 62rpx; }
+.history-empty { padding: 150rpx 0; color: var(--muted); text-align: center; font-size: 28rpx; }
+.session-list { margin-top: 24rpx; padding: 0 30rpx; border-radius: 28rpx; background: var(--paper); }
+.session-card { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; margin-top: 0; padding: 32rpx 0; border-bottom: 1rpx solid rgba(94,75,57,.11); }
+.session-card:last-child { border-bottom: 0; }
+.session-card > view:first-child { min-width: 0; }
+.session-card text { display: block; }
+.session-title { overflow: hidden; font-size: 32rpx; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.session-preview { display: -webkit-box; max-width: 500rpx; margin-top: 10rpx; overflow: hidden; color: var(--muted); font-size: 27rpx; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.session-time { color: var(--muted); font-size: 23rpx; white-space: nowrap; }
+.session-arrow { margin-top: 8rpx; color: #9d8d7c; text-align: right; font-size: 34rpx; }
+.history-boundary { display: block; margin: 28rpx 8rpx 0; color: var(--muted); font-size: 24rpx; line-height: 1.6; }

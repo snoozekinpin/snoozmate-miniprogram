@@ -1,0 +1,14 @@
+<view class="page events-page">
+  <view class="brand">好眠 SnoozMate</view><view class="page-title">昨夜发生了什么</view><view class="page-lead">这里只展示结构化事件。整夜原始录音默认不上云，也不提供回放。</view>
+  <view class="night-scope" wx:if="{{nightLabel}}"><text class="night-scope-date">{{nightLabel}}</text><text class="night-scope-copy">只展示最近一晚；白天调试记录不会计入。</text></view>
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取夜间事件</text><text class="state-copy">正在同步设备产生的结构化记录。</text></view>
+  <state-banner wx:elif="{{error}}" tone="danger" title="{{error.title}}" detail="{{error.detail}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="empty-state" wx:elif="{{phase === 'empty'}}">暂无结构化夜间事件。这表示当前没有可展示的事件，不是同步失败。</view>
+  <block wx:else>
+  <scroll-view class="filter-scroll" scroll-x><view class="chip-row nowrap"><view wx:for="{{filters}}" wx:key="id" class="chip {{filter === item.id ? 'active' : ''}}" data-filter="{{item.id}}" bindtap="setFilter">{{item.name}}</view></view></scroll-view>
+  <view class="timeline">
+    <view class="event-row" wx:for="{{visibleEvents}}" wx:key="id"><view class="event-time">{{item.time}}</view><view class="line"><view class="event-dot {{item.type}}"></view></view><view class="event-card"><text>{{item.title}}</text><text>{{item.detail}}</text></view></view>
+  </view>
+  <view class="safe-note">设备在本地完成感知、判断、振动、验证与停止；云端只接收结构化结果。</view>
+  </block>
+</view>

@@ -1,0 +1,19 @@
+.tonight-page { padding-top: 36rpx; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
+.mode-card { padding: 24rpx; border: 2rpx solid #eadfce; border-radius: 26rpx; background: #fffaf2; }
+.mode-card.active { border-color: var(--amber); background: rgba(210,139,45,.09); }
+.mode-card text { display: block; }
+.mode-card text:first-child { font-size: 26rpx; font-weight: 700; }
+.mode-card text:last-child { margin-top: 8rpx; color: var(--muted); font-size: 19rpx; line-height: 1.45; }
+.setting-card { padding-bottom: 12rpx; }
+.setting-name,.setting-help { display: block; }
+.setting-name { font-size: 26rpx; font-weight: 650; }
+.setting-help { margin-top: 7rpx; color: var(--muted); font-size: 19rpx; }
+.setting-value { color: var(--amber-deep); font-weight: 700; }
+.setting-card slider { margin: 22rpx 0 0; }
+.save-button { margin-top: 28rpx; }
+.mode-card.disabled { opacity: .5; pointer-events: none; }
+.state-card { margin-top: 24rpx; padding: 28rpx; border-radius: 28rpx; background: #fffaf2; text-align: center; }
+.state-card text { display: block; }
+.state-title { font-weight: 700; }
+.state-copy { margin-top: 8rpx; color: var(--muted); font-size: 21rpx; }

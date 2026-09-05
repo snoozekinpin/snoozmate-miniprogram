@@ -1,0 +1,22 @@
+<view class="page tonight-page">
+  <view class="brand">好眠 SnoozMate</view><view class="page-title">{{fromAiPlan ? '手动设置今晚方案' : '今晚怎么守护'}}</view>
+  <view class="page-lead">这些设置只在设备安全范围内生效，夜间判断与停止仍由月石床头主机本地完成。</view>
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取今晚设置</text><text class="state-copy">正在同步设备内的安全参数。</text></view>
+  <state-banner wx:elif="{{loadError}}" tone="danger" title="{{loadError.title}}" detail="{{loadError.detail}}" retryable="{{loadError.retryable}}" action="{{loadError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="empty-state" wx:elif="{{phase === 'empty'}}">暂无今晚设置。请确认设备已完成绑定与配网。</view>
+  <block wx:else>
+  <state-banner wx:if="{{actionError}}" tone="danger" title="{{actionError.title}}" detail="{{actionError.detail}}" retryable="{{actionError.retryable}}" action="{{actionError.action}}" bindretry="retryAction" bindaction="handleActionError" />
+  <state-banner wx:if="{{controlError}}" tone="warning" title="{{controlError.title}}" detail="{{controlError.detail}}" retryable="{{controlError.retryable}}" action="{{controlError.action}}" bindretry="retry" bindaction="handleServiceAction" />
+
+  <view class="section-title">同睡情况</view>
+  <view class="mode-grid"><view class="mode-card {{settings.sleepMode === 'solo' ? 'active' : ''}} {{saving || !controlAvailable ? 'disabled' : ''}}" data-mode="solo" bindtap="setMode"><text>独睡</text><text>优先关注体位变化</text></view><view class="mode-card {{settings.sleepMode === 'shared' ? 'active' : ''}} {{saving || !controlAvailable ? 'disabled' : ''}}" data-mode="shared" bindtap="setMode"><text>共享睡眠</text><text>使用更克制的提醒节奏</text></view></view>
+
+  <view class="card setting-card"><view class="row"><view><text class="setting-name">干预灵敏度</text><text class="setting-help">1 克制 · 2 均衡 · 3 积极</text></view><text class="setting-value">{{settings.sensitivity}}</text></view><slider min="1" max="3" step="1" value="{{settings.sensitivity}}" disabled="{{saving || !controlAvailable}}" activeColor="#D28B2D" backgroundColor="#E7DCCF" block-color="#FFF8EE" block-size="24" data-key="sensitivity" bindchange="setValue" /></view>
+  <view class="card setting-card"><view class="row"><view><text class="setting-name">最大振动等级</text><text class="setting-help">设备达到上限后不会继续增强</text></view><text class="setting-value">{{settings.maxVibrationLevel}} / 5</text></view><slider min="1" max="5" step="1" value="{{settings.maxVibrationLevel}}" disabled="{{saving || !controlAvailable}}" activeColor="#D28B2D" backgroundColor="#E7DCCF" block-color="#FFF8EE" block-size="24" data-key="maxVibrationLevel" bindchange="setValue" /></view>
+  <view class="card setting-card"><view class="row"><view><text class="setting-name">入睡保护时间</text><text class="setting-help">这段时间只观察，不提醒</text></view><text class="setting-value">{{settings.sleepProtectionMinutes}} 分钟</text></view><slider min="15" max="90" step="15" value="{{settings.sleepProtectionMinutes}}" disabled="{{saving || !controlAvailable}}" activeColor="#D28B2D" backgroundColor="#E7DCCF" block-color="#FFF8EE" block-size="24" data-key="sleepProtectionMinutes" bindchange="setValue" /></view>
+  <view class="card setting-card"><view class="row"><view><text class="setting-name">每晚提醒次数上限</text><text class="setting-help">设为 0 时今晚只记录</text></view><text class="setting-value">{{settings.nightlyInterventionLimit}} 次</text></view><slider min="0" max="12" step="1" value="{{settings.nightlyInterventionLimit}}" disabled="{{saving || !controlAvailable}}" activeColor="#D28B2D" backgroundColor="#E7DCCF" block-color="#FFF8EE" block-size="24" data-key="nightlyInterventionLimit" bindchange="setValue" /></view>
+
+  <view class="safe-note">小程序只保存参数，不下发连续振动动作。设备会在每次提醒后验证停鼾或翻身响应，并自行停止。</view>
+  <button hover-class="none" class="primary-button save-button" loading="{{saving}}" disabled="{{saving || !controlAvailable}}" bindtap="save">保存并同步到设备</button>
+  </block>
+</view>

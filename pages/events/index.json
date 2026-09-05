@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "夜间事件",
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

@@ -1,0 +1,19 @@
+.readiness-page { padding-top: 36rpx; }
+.center-card,.error-card { padding: 62rpx 30rpx; text-align: center; }
+.loading-mark { margin-bottom: 18rpx; color: var(--amber); font-size: 42rpx; letter-spacing: 12rpx; }
+.state-title,.state-copy { display: block; }
+.state-title { color: var(--ink); font-size: 29rpx; font-weight: 700; }
+.state-copy { margin: 12rpx 0 28rpx; color: var(--muted); font-size: 22rpx; line-height: 1.65; }
+.error-mark { width: 88rpx; height: 88rpx; margin: 0 auto 24rpx; border-radius: 50%; background: #f4dfd7; color: var(--danger); font-size: 46rpx; line-height: 88rpx; }
+.confirmation-card { padding-top: 8rpx; padding-bottom: 8rpx; }
+.confirmation-row { display: flex; align-items: center; gap: 18rpx; padding: 22rpx 0; border-bottom: 1rpx solid #eadfce; }
+.confirmation-row:last-child { border-bottom: 0; }
+.confirmation-mark { width: 42rpx; height: 42rpx; flex: 0 0 auto; border-radius: 50%; background: #e6ead1; color: var(--olive); font-size: 25rpx; font-weight: 700; line-height: 42rpx; text-align: center; }
+.confirmation-title,.confirmation-copy { display: block; }
+.confirmation-title { font-size: 25rpx; font-weight: 700; }
+.confirmation-copy { margin-top: 7rpx; color: var(--muted); font-size: 20rpx; line-height: 1.5; }
+.limits-card { padding-top: 8rpx; padding-bottom: 8rpx; }
+.limit-row { display: flex; justify-content: space-between; gap: 20rpx; padding: 21rpx 0; border-bottom: 1rpx solid #eadfce; color: var(--muted); font-size: 24rpx; }
+.limit-row:last-child { border-bottom: 0; }
+.limit-row text:last-child { color: var(--brown); font-weight: 700; }
+.complete-button { margin-top: 28rpx; }

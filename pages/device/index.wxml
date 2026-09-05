@@ -1,0 +1,33 @@
+<view class="page device-page">
+  <view class="brand">好眠 SnoozMate</view><view class="page-title">月石设备</view>
+  <view class="page-lead">本地感知与安全执行，断网仍可运行。</view>
+  <view class="state-card" wx:if="{{loading}}"><text class="state-title">正在读取设备状态</text><text class="state-copy">正在同步主机、振动片与本地模型信息。</text></view>
+  <state-banner wx:elif="{{error}}" tone="danger" title="{{error.title}}" detail="{{error.detail}}" retryable="{{error.retryable}}" action="{{error.action}}" bindretry="retry" bindaction="handleServiceAction" />
+  <view class="empty-state" wx:elif="{{phase === 'empty'}}">暂无设备状态。请确认已绑定月石床头主机后重试。</view>
+  <block wx:else>
+  <state-banner wx:if="{{status.dataSource === 'simulated'}}" tone="info" title="当前包含模拟测试数据" detail="模拟记录用于页面联调，不代表真实睡眠情况。" />
+
+  <view class="card device-hero"><image class="device-image" src="/images/host-detail.png" mode="aspectFit" /><view><text class="device-name">月石床头主机</text><text>{{status.host.serialNumber}}</text><text class="online-copy">{{status.host.online ? '在线' : '离线'}}</text></view></view>
+
+  <view class="section-title">连接状态</view>
+  <view class="card detail-list">
+    <view class="detail-row"><view><text>枕下定向振动片</text><text>无电池 · 无无线 · 无数据</text></view><text class="value {{status.pad.connected ? 'ok' : 'warn'}}">{{status.pad.connected ? '有线已连接' : '未连接'}}</text></view>
+  </view>
+
+  <view class="section-title">感知状态</view>
+  <view class="card detail-list">
+    <view class="detail-row"><view><text>双麦克风</text><text>仅用于本地鼾声趋势观察</text></view><text class="value {{status.microphones.status === 'ready' ? 'ok' : 'warn'}}">{{status.microphones.status === 'ready' ? '正常' : '需检查'}}</text></view>
+    <view class="detail-row"><view><text>24G 毫米波雷达</text><text>在床、体动与姿态趋势</text></view><text class="value {{status.radar.status === 'ready' ? 'ok' : 'warn'}}">{{status.radar.status === 'ready' ? '正常' : '需检查'}}</text></view>
+  </view>
+
+  <view class="section-title">版本与同步</view>
+  <view class="card detail-list">
+    <view class="detail-row" data-kind="firmware" bindtap="showUpdateInfo"><view><text>固件版本</text><text>{{status.host.firmwareVersion}}</text></view><text class="value">{{status.host.firmwareUpdateAvailable ? '待更新 ›' : '已是最新'}}</text></view>
+    <view class="detail-row" data-kind="model" bindtap="showUpdateInfo"><view><text>本地模型</text><text>{{status.host.modelVersion}}</text></view><text class="value {{status.host.modelUpdateAvailable ? 'warn' : ''}}">{{status.host.modelUpdateAvailable ? '待更新 ›' : '已是最新'}}</text></view>
+    <view class="detail-row"><view><text>上次同步</text><text>结构化事件与夜间摘要</text></view><text class="value {{status.sync.status === 'success' ? 'ok' : 'warn'}}">{{status.sync.lastSyncedAt}}</text></view>
+    <view class="detail-row"><view><text>数据来源</text><text>真实设备与模拟记录会明确区分</text></view><text class="value {{status.dataSource === 'device' ? 'ok' : 'warn'}}">{{status.dataSource === 'device' ? '真实设备' : status.dataSource === 'simulated' ? '模拟测试' : '尚无数据'}}</text></view>
+  </view>
+
+  <view class="safe-note">夜间闭环由月石本地执行，小程序仅下发安全范围内的设置。</view>
+  </block>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "解读详情",
+  "usingComponents": {
+    "state-banner": "/components/state-banner/index"
+  }
+}

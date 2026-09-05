@@ -1,0 +1,42 @@
+<view class="page onboarding">
+  <view class="brand">好眠 SnoozMate</view>
+  <state-banner wx:if="{{error}}" tone="danger" title="{{error.title}}" detail="{{error.detail}}" retryable="{{error.retryable}}" action="{{error.action}}" bindaction="handleServiceAction" bindretry="handleServiceAction" />
+
+  <block wx:if="{{phase === 'login'}}">
+    <view class="moon-mark"><view class="moon-glow"></view></view>
+    <view class="page-title">让夜晚安静一点</view>
+    <view class="page-lead">微信身份用于保存你的连续趋势、设备绑定和家庭睡眠设置。</view>
+    <button hover-class="none" class="primary-button login-button" loading="{{loading}}" disabled="{{submitting}}" bindtap="login">微信登录并继续</button>
+    <view class="safe-note">好眠是家庭趋势观察设备，不替代医疗检查。</view>
+  </block>
+
+  <block wx:elif="{{phase === 'profile'}}">
+    <view class="page-title">先认识一下你</view>
+    <view class="page-lead">这些信息只用于组织报告和今晚设置。</view>
+    <view class="card form-card">
+      <view class="field-label">称呼</view>
+      <input class="text-input" value="{{nickname}}" maxlength="16" disabled="{{submitting}}" bindinput="setNickname" />
+      <view class="field-label second">通常的同睡情况</view>
+      <view class="mode-grid">
+        <view class="mode-option {{sleepMode === 'solo' ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-mode="solo" bindtap="setSleepMode">
+          <text class="mode-title">独睡</text><text>只关注自己的夜间趋势</text>
+        </view>
+        <view class="mode-option {{sleepMode === 'shared' ? 'active' : ''}} {{submitting ? 'disabled' : ''}}" data-mode="shared" bindtap="setSleepMode">
+          <text class="mode-title">共享睡眠</text><text>兼顾伴侣是否被影响</text>
+        </view>
+      </view>
+    </view>
+    <button hover-class="none" class="primary-button" loading="{{submitting}}" disabled="{{submitting}}" bindtap="saveProfile">继续</button>
+  </block>
+
+  <block wx:else>
+    <view class="page-title">隐私与使用边界</view>
+    <view class="page-lead">请确认以下三项，再开始绑定设备。</view>
+    <view class="card privacy-card">
+      <view class="privacy-row"><view><text>结构化事件上云</text><text>保存事件、摘要和趋势</text></view><switch color="#D28B2D" checked="{{privacy.structured}}" disabled="{{submitting}}" data-key="structured" bindchange="togglePrivacy" /></view>
+      <view class="privacy-row"><view><text>整夜原始录音默认不上云</text><text>小程序不提供原始音频回放</text></view><switch color="#D28B2D" checked="{{privacy.rawAudio}}" disabled="{{submitting}}" data-key="rawAudio" bindchange="togglePrivacy" /></view>
+      <view class="privacy-row"><view><text>非医疗诊断</text><text>用于趋势观察与体位提醒</text></view><switch color="#D28B2D" checked="{{privacy.nonMedical}}" disabled="{{submitting}}" data-key="nonMedical" bindchange="togglePrivacy" /></view>
+    </view>
+    <button hover-class="none" class="primary-button" loading="{{submitting}}" disabled="{{submitting || !privacy.structured || !privacy.rawAudio || !privacy.nonMedical}}" bindtap="acceptPrivacy">同意并添加设备</button>
+  </block>
+</view>
